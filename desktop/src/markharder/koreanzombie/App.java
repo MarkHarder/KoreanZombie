@@ -1,7 +1,10 @@
 package markharder.koreanzombie;
 
+import markharder.koreanzombie.korean.KoreanString;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
@@ -23,6 +26,7 @@ public class App implements ApplicationListener {
     private BitmapFont font;
     private Texture fieldTexture;
     private Sprite field;
+    private KoreanString input;
 
     @Override
     public void create() {
@@ -53,6 +57,18 @@ public class App implements ApplicationListener {
         fieldTexture = new Texture(Gdx.files.internal("images/field.png"));
         field = new Sprite(fieldTexture);
         field.setCenter(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+
+        input = new KoreanString();
+
+        // keyboard observer
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            // when a character is typed, add it to the input string
+            public boolean keyTyped(char character) {
+                input.add(character);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -76,7 +92,8 @@ public class App implements ApplicationListener {
         field.draw(batch);
 
         // draw words
-        font.draw(batch, "I can use English and Korean here now!\n여기에 영어하고 한국어를 할 수 있다!", 200, GAME_HEIGHT - 100);
+        font.draw(batch, "price", 200, GAME_HEIGHT - 100);
+        font.draw(batch, input.toString(), 200, GAME_HEIGHT - 150);
 
         batch.end();
     }
