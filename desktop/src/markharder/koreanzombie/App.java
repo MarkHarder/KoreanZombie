@@ -10,11 +10,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class App implements ApplicationListener {
     private float GAME_WIDTH;
     private float GAME_HEIGHT;
 
+    private Array<TextureRegion> fontTextureRegions;
     private Camera camera;
     private SpriteBatch batch;
     private BitmapFont font;
@@ -35,9 +38,16 @@ public class App implements ApplicationListener {
         batch = new SpriteBatch();
 
         // set up the fonts
-        font = new BitmapFont();
+        fontTextureRegions = new Array<TextureRegion>();
+
+        // load Batang1.png to Batang43.png as texture regions
+        for (int i = 1; i < 44; i++) {
+            fontTextureRegions.add(new TextureRegion(new Texture(Gdx.files.internal("fonts/Batang" + i + ".png"))));
+        }
+
+        // load the font file and the texture regions
+        font = new BitmapFont(new BitmapFont.BitmapFontData(Gdx.files.internal("fonts/Batang.fnt"), false), fontTextureRegions, false);
         font.setColor(Color.YELLOW);
-        font.getData().scale(1.5f);
 
         // set up the images
         fieldTexture = new Texture(Gdx.files.internal("images/field.png"));
@@ -66,7 +76,7 @@ public class App implements ApplicationListener {
         field.draw(batch);
 
         // draw words
-        font.draw(batch, "Word - 단어", 200, GAME_HEIGHT - 100);
+        font.draw(batch, "I can use English and Korean here now!\n여기에 영어하고 한국어를 할 수 있다!", 200, GAME_HEIGHT - 100);
 
         batch.end();
     }
