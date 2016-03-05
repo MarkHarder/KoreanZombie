@@ -84,7 +84,15 @@ public class App implements ApplicationListener {
             @Override
             // when a character is typed, add it to the input string
             public boolean keyTyped(char character) {
-                input.add(character);
+                if ((int) character == 13) {
+                    // enter key
+                    input.clear();
+                } else if ((int) character == 9) {
+                    // tab key
+                    zombies.clear();
+                } else {
+                    input.add(character);
+                }
                 return true;
             }
         });
