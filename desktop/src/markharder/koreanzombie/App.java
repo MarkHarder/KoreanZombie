@@ -1,6 +1,10 @@
 package markharder.koreanzombie;
 
 import markharder.koreanzombie.korean.KoreanString;
+import markharder.koreanzombie.game.Zombie;
+import markharder.koreanzombie.game.SlowZombie;
+import markharder.koreanzombie.game.NormalZombie;
+import markharder.koreanzombie.game.FastZombie;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -15,12 +19,18 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
+
+import java.util.Random;
 
 public class App implements ApplicationListener {
+	private Random rand;
     private float GAME_WIDTH;
     private float GAME_HEIGHT;
+    private long lastZombieTime;
 
     private Array<TextureRegion> fontTextureRegions;
+    private Array<Zombie> zombies;
     private Camera camera;
     private SpriteBatch batch;
     private BitmapFont font;
@@ -30,8 +40,12 @@ public class App implements ApplicationListener {
 
     @Override
     public void create() {
+        rand = new Random();
         GAME_WIDTH = 1440;
         GAME_HEIGHT = 1440 * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+        lastZombieTime = TimeUtils.nanoTime();
+
+        zombies = new Array<Zombie>();
 
         // set up the camera
         camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT);
@@ -80,6 +94,26 @@ public class App implements ApplicationListener {
 
     @Override
     public void render() {
+        // update the zombies
+        Array<Zombie> delete = new Array<Zombie>();
+        for (Zombie z : zombies) {
+            z.act(Gdx.graphics.getDeltaTime());
+            // if a zombie reaches the center, remove it
+            if (z.getDistance() <= 17.5) {
+                delete.add(z);
+            }
+        }
+
+        for (Zombie z : delete) {
+            zombies.removeValue(z, true);
+        }
+
+        // spawn a new zombie after a set time
+        if(TimeUtils.nanoTime() - lastZombieTime > 2000000000) {
+            lastZombieTime = TimeUtils.nanoTime();
+            zombies.add(spawnZombie());
+        }
+
         batch.setProjectionMatrix(camera.combined);
 
         // clear everything black
@@ -92,11 +126,43 @@ public class App implements ApplicationListener {
         field.draw(batch);
 
         // draw words
-        font.draw(batch, "price", 200, GAME_HEIGHT - 100);
+        font.draw(batch, "price, cost, value", 200, GAME_HEIGHT - 100);
         font.draw(batch, input.toString(), 200, GAME_HEIGHT - 150);
+
+        // draw the zombies
+        for (Zombie z : zombies) {
+            z.draw(batch);
+        }
 
         batch.end();
     }
+
+	private Zombie spawnZombie() {
+        // the angle from which the zombie approaches the center
+        //   0 is straight right
+		int degree = rand.nextInt(360);
+        // the distance from the center
+        //   (should start at the field edge so here it's just the field radius)
+		int distance = ((int) field.getHeight()) / 2;
+        // determine what kind of zombie (slow, normal, or fast)
+        // 0-5 = Slow (60%)
+        // 6-8 = Normal (30%)
+        //   9 = Fast (10%)
+		double category = rand.nextInt(10);
+		double speed = 0.3;
+
+		if (category > 8) {
+			speed += 0.3;
+            return new FastZombie(degree, distance);
+		}
+
+		if (category > 5) {
+			speed += 0.3;
+            return new NormalZombie(degree, distance);
+		}
+
+		return new SlowZombie(degree, distance);
+	}
 
     @Override
     public void resize(int width, int height) {
