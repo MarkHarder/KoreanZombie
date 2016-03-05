@@ -33,4 +33,8 @@ public class Zombie {
         double y = yOffset + Math.sin(degree) * distance - r + 800 / 2;
         batch.draw(texture, (float) x, (float) y);
 	}
+
+    public void dispose() {
+        texture.dispose();
+    }
 }

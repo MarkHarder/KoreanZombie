@@ -138,6 +138,10 @@ public class KoreanString {
             }
         }
     }
+    
+    public void clear() {
+        text.clear();
+    }
 
     public String toString() {
         String output = "";

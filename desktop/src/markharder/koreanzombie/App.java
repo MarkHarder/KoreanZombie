@@ -31,6 +31,7 @@ public class App implements ApplicationListener {
 
     private Array<TextureRegion> fontTextureRegions;
     private Array<Zombie> zombies;
+    private Array<Texture> lives;
     private Camera camera;
     private SpriteBatch batch;
     private BitmapFont font;
@@ -46,6 +47,10 @@ public class App implements ApplicationListener {
         lastZombieTime = TimeUtils.nanoTime();
 
         zombies = new Array<Zombie>();
+        lives = new Array<Texture>();
+        lives.add(new Texture(Gdx.files.internal("images/heart.png")));
+        lives.add(new Texture(Gdx.files.internal("images/heart.png")));
+        lives.add(new Texture(Gdx.files.internal("images/heart.png")));
 
         // set up the camera
         camera = new OrthographicCamera(GAME_WIDTH, GAME_HEIGHT);
@@ -90,10 +95,41 @@ public class App implements ApplicationListener {
         batch.dispose();
         font.dispose();
         fieldTexture.dispose();
+        for (Texture t : lives) {
+            t.dispose();
+        }
+        for (Zombie z : zombies) {
+            z.dispose();
+        }
     }
 
     @Override
     public void render() {
+        // check the answer
+        if (input.toString().equals("가격")) {
+            input.clear();
+
+            // find the zombie closest to the center
+            Zombie closestZombie = null;
+
+            for (Zombie z : zombies) {
+                if (closestZombie == null) {
+                    closestZombie = z;
+                } else if (closestZombie.getDistance() > z.getDistance()) {
+                    closestZombie = z;
+                }
+            }
+
+            // if there is no zombie in play, reset the spawn timer
+            // otherwise remove the closest zombie
+            if (closestZombie == null) {
+                lastZombieTime = TimeUtils.nanoTime();
+            } else {
+                closestZombie.dispose();
+                zombies.removeValue(closestZombie, true);
+            }
+        }
+
         // update the zombies
         Array<Zombie> delete = new Array<Zombie>();
         for (Zombie z : zombies) {
@@ -101,10 +137,17 @@ public class App implements ApplicationListener {
             // if a zombie reaches the center, remove it
             if (z.getDistance() <= 17.5) {
                 delete.add(z);
+
+                // remove a life, if no lives remain end the game
+                lives.pop();
+                if (lives.size == 0) {
+                    Gdx.app.exit();
+                }
             }
         }
 
         for (Zombie z : delete) {
+            z.dispose();
             zombies.removeValue(z, true);
         }
 
@@ -122,8 +165,16 @@ public class App implements ApplicationListener {
 
         batch.begin();
 
-        // draw images
+        // draw field
         field.draw(batch);
+
+        // draw hearts
+        for (int i = 0; i < lives.size; i++) {
+            Texture t = lives.get(i);
+            float x = field.getX() - t.getWidth() - 20;
+            float y = field.getY() + 30 + i * (t.getHeight() + 20);
+            batch.draw(t, x, y);
+        }
 
         // draw words
         font.draw(batch, "price, cost, value", 200, GAME_HEIGHT - 100);
