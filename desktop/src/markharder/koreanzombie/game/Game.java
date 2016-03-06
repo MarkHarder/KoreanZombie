@@ -136,9 +136,9 @@ public class Game {
         }
 
         // draw words
-        App.font.setColor(Color.YELLOW);
-        App.font.draw(batch, "price, cost, value", 200, height - 100);
-        App.font.draw(batch, input.toString(), 200, height - 150);
+        ((App) Gdx.app.getApplicationListener()).font.setColor(Color.YELLOW);
+        ((App) Gdx.app.getApplicationListener()).font.draw(batch, "price, cost, value", 200, height - 100);
+        ((App) Gdx.app.getApplicationListener()).font.draw(batch, input.toString(), 200, height - 150);
 
         // draw the zombies
         for (Zombie z : zombies) {

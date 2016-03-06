@@ -17,7 +17,7 @@ public class MenuButton {
         this.value = value;
 
         background = new Texture(Gdx.files.internal("images/button_background.png"));
-        layout = new GlyphLayout(App.font, value);
+        layout = new GlyphLayout(((App) Gdx.app.getApplicationListener()).font, value);
     }
 
     public void dispose() {
@@ -29,7 +29,7 @@ public class MenuButton {
         // center the text
         float centerX = x + background.getWidth() / 2 - layout.width / 2;
         float centerY = y + background.getHeight() / 2 + layout.height / 2;
-        App.font.setColor(Color.WHITE);
-        App.font.draw(batch, value, centerX, centerY);
+        ((App) Gdx.app.getApplicationListener()).font.setColor(Color.WHITE);
+        ((App) Gdx.app.getApplicationListener()).font.draw(batch, value, centerX, centerY);
     }
 }
