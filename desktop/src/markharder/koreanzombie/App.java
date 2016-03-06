@@ -1,6 +1,7 @@
 package markharder.koreanzombie;
 
 import markharder.koreanzombie.game.Game;
+import markharder.koreanzombie.menu.Menu;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -14,12 +15,24 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class App implements ApplicationListener {
     private Camera camera;
     private SpriteBatch batch;
+    private Menu menu;
     private Game game;
+    private Mode currentMode;
+
+    public enum Mode {
+        MENU,
+        GAME
+    }
 
     @Override
     public void create() {
+        // the main menu
+        menu = new Menu();
+
         // the actual game
         game = new Game();
+
+        currentMode = Mode.MENU;
 
         // set up the camera
         camera = new OrthographicCamera(game.getWidth(), game.getHeight());
@@ -35,7 +48,11 @@ public class App implements ApplicationListener {
             @Override
             // when a character is typed, add it to the input string
             public boolean keyTyped(char character) {
-                game.keyTyped(character);
+                if (currentMode == Mode.MENU) {
+                    menu.keyTyped(character);
+                } else if (currentMode == Mode.GAME) {
+                    game.keyTyped(character);
+                }
                 return true;
             }
         });
@@ -44,12 +61,17 @@ public class App implements ApplicationListener {
     @Override
     public void dispose() {
         batch.dispose();
+        menu.dispose();
         game.dispose();
     }
 
     @Override
     public void render() {
-        game.act();
+        if (currentMode == Mode.MENU) {
+            menu.act();
+        } else if (currentMode == Mode.GAME) {
+            game.act();
+        }
 
         batch.setProjectionMatrix(camera.combined);
 
@@ -59,7 +81,11 @@ public class App implements ApplicationListener {
 
         batch.begin();
 
-        game.draw(batch);
+        if (currentMode == Mode.MENU) {
+            menu.draw(batch);
+        } else if (currentMode == Mode.GAME) {
+            game.draw(batch);
+        }
 
         batch.end();
     }

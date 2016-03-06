@@ -18,16 +18,16 @@ public class Game {
 	private Random rand;
     private float width;
     private float height;
-    private long lastZombieTime;
 
-    private Array<TextureRegion> fontTextureRegions;
+    private long lastZombieTime;
     private Array<Zombie> zombies;
     private Array<Texture> lives;
+    private KoreanString input;
 
+    private Array<TextureRegion> fontTextureRegions;
     private BitmapFont font;
     private Texture fieldTexture;
     private Sprite field;
-    private KoreanString input;
 
     public Game() {
         rand = new Random();
