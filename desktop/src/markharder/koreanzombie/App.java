@@ -10,9 +10,16 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 public class App implements ApplicationListener {
+    private static Array<TextureRegion> fontTextureRegions;
+    public static BitmapFont font;
+
     private Camera camera;
     private SpriteBatch batch;
     private Menu menu;
@@ -24,8 +31,29 @@ public class App implements ApplicationListener {
         GAME
     }
 
+    // the font files are large so only initialize the font bitmap once
+    static {
+        // set up the fonts
+        fontTextureRegions = new Array<TextureRegion>();
+        font = null;
+    }
+
     @Override
     public void create() {
+        /*
+         * Important!
+         * the font is too large to load in multiple classes
+         * but they can't be created until we can access Gdx.files.internal
+         * so this code must be called before using any font
+         */
+        // load Batang1.png to Batang43.png as texture regions
+        for (int i = 1; i < 44; i++) {
+            fontTextureRegions.add(new TextureRegion(new Texture(Gdx.files.internal("fonts/Batang" + i + ".png"))));
+        }
+
+        // load the font file and the texture regions
+        font = new BitmapFont(new BitmapFont.BitmapFontData(Gdx.files.internal("fonts/Batang.fnt"), false), fontTextureRegions, false);
+
         // the main menu
         menu = new Menu();
 
@@ -63,6 +91,10 @@ public class App implements ApplicationListener {
         batch.dispose();
         menu.dispose();
         game.dispose();
+        for (TextureRegion t : fontTextureRegions) {
+            t.getTexture().dispose();
+        }
+        font.dispose();
     }
 
     @Override

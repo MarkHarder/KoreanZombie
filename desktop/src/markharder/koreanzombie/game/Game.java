@@ -1,13 +1,12 @@
 package markharder.koreanzombie.game;
 
+import markharder.koreanzombie.App;
 import markharder.koreanzombie.korean.KoreanString;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -24,8 +23,6 @@ public class Game {
     private Array<Texture> lives;
     private KoreanString input;
 
-    private Array<TextureRegion> fontTextureRegions;
-    private BitmapFont font;
     private Texture fieldTexture;
     private Sprite field;
 
@@ -42,23 +39,11 @@ public class Game {
         lives.add(new Texture(Gdx.files.internal("images/heart.png")));
         lives.add(new Texture(Gdx.files.internal("images/heart.png")));
 
-        // set up the fonts
-        fontTextureRegions = new Array<TextureRegion>();
-
-        // load Batang1.png to Batang43.png as texture regions
-        for (int i = 1; i < 44; i++) {
-            fontTextureRegions.add(new TextureRegion(new Texture(Gdx.files.internal("fonts/Batang" + i + ".png"))));
-        }
-
-        // load the font file and the texture regions
-        font = new BitmapFont(new BitmapFont.BitmapFontData(Gdx.files.internal("fonts/Batang.fnt"), false), fontTextureRegions, false);
-        font.setColor(Color.YELLOW);
 
         // set up the images
         fieldTexture = new Texture(Gdx.files.internal("images/field.png"));
         field = new Sprite(fieldTexture);
         field.setCenter(width / 2, height / 2);
-
     }
 
     public void keyTyped(char character) {
@@ -74,7 +59,6 @@ public class Game {
     }
 
     public void dispose() {
-        font.dispose();
         fieldTexture.dispose();
         for (Texture t : lives) {
             t.dispose();
@@ -152,8 +136,9 @@ public class Game {
         }
 
         // draw words
-        font.draw(batch, "price, cost, value", 200, height - 100);
-        font.draw(batch, input.toString(), 200, height - 150);
+        App.font.setColor(Color.YELLOW);
+        App.font.draw(batch, "price, cost, value", 200, height - 100);
+        App.font.draw(batch, input.toString(), 200, height - 150);
 
         // draw the zombies
         for (Zombie z : zombies) {
