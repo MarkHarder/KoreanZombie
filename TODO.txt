@@ -1,0 +1,33 @@
+Add statistics
+  Use a database to store questions and related information
+  track time taken to answer
+  track correct / skip
+  calculate WPM
+  calculate percent correct
+  save statistics in external file / database
+  view in settings?
+Enter to skip
+  Count word as wrong
+Pause the game (resume, restart, back to menu)
+Instructions
+  add instruction button to the main menu
+Main Menu Title
+Word Lists
+  Allow user to submit word/definition files
+  in settings?
+Quit saves data
+  save statistics on back and ctrl-q
+Fade text (Check/X)
+  after correct answer / skip - slowly fade the text
+Menu
+  responsive buttons? (change color on hover, etc.)
+  better size?
+Better zombie drawing
+  (don't load a texture for each individual class, make it static)
+Remove magic numbers
+  zombie touches center
+  zombie draw offset
+Improve graphics
+
+TODO flagged code
+  font color won't change unless rgb888 is called
