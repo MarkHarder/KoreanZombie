@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -27,7 +28,18 @@ public class Game {
     private Array<Zombie> zombies;
     private Array<Texture> lives;
     private KoreanString input;
+
+    // the currently displayed defintion and anwer
     private Question currentQuestion;
+
+    /*
+     * the powerbar
+     *   correct answers give power
+     *   press tab with 10+ power and clear all active zombies
+     */
+    private Texture powerbarOverflow;
+    private TextureRegion powerbar;
+    private int power;
 
     private Texture fieldTexture;
     private Sprite field;
@@ -55,6 +67,10 @@ public class Game {
         }
         currentQuestion = randomQuestion();
 
+        powerbarOverflow = new Texture(Gdx.files.internal("images/powerbar_overflow.png"));
+        powerbar = new TextureRegion(new Texture(Gdx.files.internal("images/powerbar.png")));
+        power = 0;
+
         // set up the images
         fieldTexture = new Texture(Gdx.files.internal("images/field.png"));
         field = new Sprite(fieldTexture);
@@ -65,14 +81,21 @@ public class Game {
 
         if ((int) character == 27) {
             // escape key
+            // go back to the main menu
             ((App) Gdx.app.getApplicationListener()).setMode(App.Mode.MENU);
         } else if ((int) character == 13) {
             // enter key
+            // clear the input and give a new question
+            // essentially skipping a question
             input.clear();
             currentQuestion = randomQuestion();
         } else if ((int) character == 9) {
             // tab key
-            zombies.clear();
+            // clear zombies if there is enough power
+            if (power >= 10) {
+                power -= 10;
+                zombies.clear();
+            }
         } else {
             input.add(character);
         }
@@ -91,8 +114,10 @@ public class Game {
     public void act() {
         // check the answer
         if (input.toString().equals(currentQuestion.getAnswer())) {
+            // clear the input, get a new question, increase power
             input.clear();
             currentQuestion = randomQuestion();
+            power += 1;
 
             // find the zombie closest to the center
             Zombie closestZombie = null;
@@ -155,6 +180,17 @@ public class Game {
             float y = field.getY() + 30 + i * (t.getHeight() + 20);
             batch.draw(t, x, y);
         }
+        
+        // draw powerbar
+        if (power >= 10) {
+            batch.draw(powerbarOverflow, field.getX() + field.getWidth() + 25, field.getY());
+            // TODO: figure out why rgb888 method is necessary
+            // without it, the font color is white
+            // Color(241f, 196f, 15f, 255f) doesn't work
+            ((App) Gdx.app.getApplicationListener()).font.setColor(new Color(Color.rgb888(241f, 196f, 15f)));
+            ((App) Gdx.app.getApplicationListener()).font.draw(batch, "x" + (power / 10), field.getX() + field.getWidth() + 50, field.getY() + field.getHeight());
+        }
+        batch.draw(powerbar, field.getX() + field.getWidth() + 20, field.getY(), 30, 80 * (power % 10));
 
         // draw words
         ((App) Gdx.app.getApplicationListener()).font.setColor(Color.YELLOW);
@@ -215,6 +251,11 @@ public class Game {
 		return new SlowZombie(degree, distance);
 	}
 
+    /*
+     * load defintion/answers from a text file
+     * the defintion is on one line and the answer is on the following line
+     * the answer may be indented with whitespace
+     */
     private void loadQuestions(String filePath) throws IOException {
         BufferedReader inbuffer = Gdx.files.internal(filePath).reader(2048);
         String definition = inbuffer.readLine();
