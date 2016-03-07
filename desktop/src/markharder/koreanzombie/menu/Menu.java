@@ -9,11 +9,27 @@ public class Menu {
 
     public Menu() {
         buttons = new Array<MenuButton>();
-        buttons.add(new MenuButton("Play"));
-        buttons.add(new MenuButton("Quit"));
+        addButton("Play");
+        addButton("Quit");
+    }
+
+    public void addButton(String value) {
+        int i = buttons.size;
+        int x = 200;
+        int y = Gdx.graphics.getHeight() - 250 - (150 * i);
+        buttons.add(new MenuButton(value, x, y));
     }
 
     public void keyTyped(char character) {
+    }
+
+    public String touchUp(int x, int y, int pointer, int button) {
+        for (MenuButton b : buttons) {
+            if (b.contains(x, y)) {
+                return b.getValue();
+            }
+        }
+        return null;
     }
 
     public void dispose() {
@@ -26,10 +42,8 @@ public class Menu {
     }
 
     public void draw(Batch batch) {
-        for (int i = 0; i < buttons.size; i++) {
-            int x = 200;
-            int y = Gdx.graphics.getHeight() - 250 - (150 * i);
-            buttons.get(i).draw(batch, x, y);
+        for (MenuButton b : buttons) {
+            b.draw(batch);
         }
     }
 }

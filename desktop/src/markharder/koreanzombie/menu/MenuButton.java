@@ -9,12 +9,16 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
 public class MenuButton {
+    private int x;
+    private int y;
     private Texture background;
     private String value;
     private GlyphLayout layout;
 
-    public MenuButton(String value) {
+    public MenuButton(String value, int x, int y) {
         this.value = value;
+        this.x = x;
+        this.y = y;
 
         background = new Texture(Gdx.files.internal("images/button_background.png"));
         layout = new GlyphLayout(((App) Gdx.app.getApplicationListener()).font, value);
@@ -24,7 +28,15 @@ public class MenuButton {
         background.dispose();
     }
 
-    public void draw(Batch batch, int x, int y) {
+    public String getValue() {
+        return value;
+    }
+
+    public boolean contains(int checkX, int checkY) {
+        return (checkX >= x && checkY <= y + background.getHeight() && checkX <= x + background.getWidth() && checkY >= y);
+    }
+
+    public void draw(Batch batch) {
         batch.draw(background, x, y);
         // center the text
         float centerX = x + background.getWidth() / 2 - layout.width / 2;

@@ -47,7 +47,11 @@ public class Game {
     }
 
     public void keyTyped(char character) {
-        if ((int) character == 13) {
+
+        if ((int) character == 27) {
+            // escape key
+            ((App) Gdx.app.getApplicationListener()).setMode(App.Mode.MENU);
+        } else if ((int) character == 13) {
             // enter key
             input.clear();
         } else if ((int) character == 9) {
@@ -105,7 +109,7 @@ public class Game {
                 // remove a life, if no lives remain end the game
                 lives.pop();
                 if (lives.size == 0) {
-                    Gdx.app.exit();
+                    ((App) Gdx.app.getApplicationListener()).setMode(App.Mode.MENU);
                 }
             }
         }

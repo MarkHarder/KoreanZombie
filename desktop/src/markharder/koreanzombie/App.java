@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 public class App implements ApplicationListener {
@@ -48,7 +49,7 @@ public class App implements ApplicationListener {
         // the main menu
         menu = new Menu();
 
-        // the actual game
+        // the game
         game = new Game();
 
         currentMode = Mode.MENU;
@@ -65,12 +66,28 @@ public class App implements ApplicationListener {
         // keyboard observer
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
-            // when a character is typed, add it to the input string
             public boolean keyTyped(char character) {
+                // when a character is typed, add it to the input string
                 if (currentMode == Mode.MENU) {
                     menu.keyTyped(character);
                 } else if (currentMode == Mode.GAME) {
                     game.keyTyped(character);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean touchUp(int x, int y, int pointer, int button) {
+                Vector3 gameCoordinates = camera.unproject(new Vector3(x, y, 0));
+                if (currentMode == Mode.MENU) {
+                    String value = menu.touchUp(((int) gameCoordinates.x), ((int) gameCoordinates.y), pointer, button);
+                    if (value == "Play") {
+                        game = new Game();
+
+                        currentMode = Mode.GAME;
+                    } else if (value == "Quit") {
+                        Gdx.app.exit();
+                    }
                 }
                 return true;
             }
@@ -126,5 +143,9 @@ public class App implements ApplicationListener {
 
     @Override
     public void resume() {
+    }
+
+    public void setMode(Mode newMode) {
+        currentMode = newMode;
     }
 }
