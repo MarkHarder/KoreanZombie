@@ -8,9 +8,11 @@ To run the program, execute:
 
     $ ./gradlew desktop:run
 
-This program was made using Gradle 2.11 and Java 1.8.0_20
+This program was made using LibGDX 1.6.1, Gradle 2.11, and Java 1.8.0_20
 
 ## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/MarkHarder/KoreanZombie.
 
 ## License
 
