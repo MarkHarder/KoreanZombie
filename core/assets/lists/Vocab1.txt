@@ -1,0 +1,32 @@
+store
+  가게
+price
+  가격
+furniture
+  가구
+furniture store
+  가구점
+to be close
+  가깝다
+once in a while, sometimes
+  가끔
+to be thin (object)
+  가늘다
+to be possible
+  가능하다
+to go
+  가다
+to teach
+  가르치다
+bag
+  가방
+to be light
+  가볍다
+singer
+  가수
+chest
+  가슴
+middle, center
+  가운데
+scissors
+  가위

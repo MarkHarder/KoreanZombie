@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Random;
 
 public class Game {
@@ -21,9 +23,11 @@ public class Game {
     private float height;
 
     private long lastZombieTime;
+    private Array<Question> questions;
     private Array<Zombie> zombies;
     private Array<Texture> lives;
     private KoreanString input;
+    private Question currentQuestion;
 
     private Texture fieldTexture;
     private Sprite field;
@@ -43,6 +47,13 @@ public class Game {
         lives.add(new Texture(Gdx.files.internal("images/heart.png")));
         lives.add(new Texture(Gdx.files.internal("images/heart.png")));
 
+        questions = new Array<Question>();
+        try {
+            loadQuestions("lists/Vocab1.txt");
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        currentQuestion = randomQuestion();
 
         // set up the images
         fieldTexture = new Texture(Gdx.files.internal("images/field.png"));
@@ -58,6 +69,7 @@ public class Game {
         } else if ((int) character == 13) {
             // enter key
             input.clear();
+            currentQuestion = randomQuestion();
         } else if ((int) character == 9) {
             // tab key
             zombies.clear();
@@ -78,8 +90,9 @@ public class Game {
 
     public void act() {
         // check the answer
-        if (input.toString().equals("가격")) {
+        if (input.toString().equals(currentQuestion.getAnswer())) {
             input.clear();
+            currentQuestion = randomQuestion();
 
             // find the zombie closest to the center
             Zombie closestZombie = null;
@@ -145,7 +158,7 @@ public class Game {
 
         // draw words
         ((App) Gdx.app.getApplicationListener()).font.setColor(Color.YELLOW);
-        ((App) Gdx.app.getApplicationListener()).font.draw(batch, "price, cost, value", 200, height - 100);
+        ((App) Gdx.app.getApplicationListener()).font.draw(batch, currentQuestion.getDefinition(), 200, height - 100);
         ((App) Gdx.app.getApplicationListener()).font.draw(batch, input.toString(), 200, height - 150);
 
         // draw the zombies
@@ -201,4 +214,19 @@ public class Game {
 
 		return new SlowZombie(degree, distance);
 	}
+
+    private void loadQuestions(String filePath) throws IOException {
+        BufferedReader inbuffer = Gdx.files.internal(filePath).reader(2048);
+        String definition = inbuffer.readLine();
+        String answer = inbuffer.readLine();
+        while (definition != null && answer != null) {
+            questions.add(new Question(definition, answer.trim()));
+            definition = inbuffer.readLine();
+            answer = inbuffer.readLine();
+        }
+    }
+
+    private Question randomQuestion() {
+        return questions.random();
+    }
 }
