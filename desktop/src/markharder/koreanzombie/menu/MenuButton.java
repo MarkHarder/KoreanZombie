@@ -31,6 +31,14 @@ public class MenuButton {
     public String getValue() {
         return value;
     }
+    
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 
     public boolean contains(int checkX, int checkY) {
         return (checkX >= x && checkY <= y + background.getHeight() && checkX <= x + background.getWidth() && checkY >= y);

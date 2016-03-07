@@ -2,6 +2,7 @@ package markharder.koreanzombie;
 
 import markharder.koreanzombie.game.Game;
 import markharder.koreanzombie.menu.Menu;
+import markharder.koreanzombie.menu.SettingsMenu;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -24,11 +25,13 @@ public class App implements ApplicationListener {
     private Camera camera;
     private SpriteBatch batch;
     private Menu menu;
+    private SettingsMenu settingsMenu;
     private Game game;
     private Mode currentMode;
 
     public enum Mode {
         MENU,
+        SETTINGS,
         GAME
     }
 
@@ -49,8 +52,11 @@ public class App implements ApplicationListener {
         // the main menu
         menu = new Menu();
 
+        // the settings menu
+        settingsMenu = new SettingsMenu();
+
         // the game
-        game = new Game();
+        game = new Game(settingsMenu.getDifficulty());
 
         currentMode = Mode.MENU;
 
@@ -67,9 +73,10 @@ public class App implements ApplicationListener {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyTyped(char character) {
-                // when a character is typed, add it to the input string
                 if (currentMode == Mode.MENU) {
                     menu.keyTyped(character);
+                } else if (currentMode == Mode.SETTINGS) {
+                    settingsMenu.keyTyped(character);
                 } else if (currentMode == Mode.GAME) {
                     game.keyTyped(character);
                 }
@@ -82,11 +89,19 @@ public class App implements ApplicationListener {
                 if (currentMode == Mode.MENU) {
                     String value = menu.touchUp(((int) gameCoordinates.x), ((int) gameCoordinates.y), pointer, button);
                     if (value == "Play") {
-                        game = new Game();
+                        game = new Game(settingsMenu.getDifficulty());
 
                         currentMode = Mode.GAME;
+                    } else if (value == "Settings") {
+                        currentMode = Mode.SETTINGS;
                     } else if (value == "Quit") {
                         Gdx.app.exit();
+                    }
+                } else if (currentMode == Mode.SETTINGS) {
+                    String value = settingsMenu.touchUp(((int) gameCoordinates.x), ((int) gameCoordinates.y), pointer, button);
+
+                    if (value == "Back") {
+                        currentMode = Mode.MENU;
                     }
                 }
                 return true;
@@ -123,6 +138,8 @@ public class App implements ApplicationListener {
 
         if (currentMode == Mode.MENU) {
             menu.draw(batch);
+        } else if (currentMode == Mode.SETTINGS) {
+            settingsMenu.draw(batch);
         } else if (currentMode == Mode.GAME) {
             game.draw(batch);
         }

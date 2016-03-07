@@ -2,6 +2,7 @@ package markharder.koreanzombie.game;
 
 import markharder.koreanzombie.App;
 import markharder.koreanzombie.korean.KoreanString;
+import markharder.koreanzombie.menu.SettingsMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import java.util.Random;
 
 public class Game {
+    private SettingsMenu.Difficulty difficulty;
 	private Random rand;
     private float width;
     private float height;
@@ -26,7 +28,9 @@ public class Game {
     private Texture fieldTexture;
     private Sprite field;
 
-    public Game() {
+    public Game(SettingsMenu.Difficulty difficulty) {
+        this.difficulty = difficulty;
+
         rand = new Random();
         width = 1440;
         height = 1440 * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
@@ -175,16 +179,23 @@ public class Game {
         // 0-5 = Slow (60%)
         // 6-8 = Normal (30%)
         //   9 = Fast (10%)
+        // on east difficulty:
+        //   70% Slow, 30% Normal, 0% Fast
+        // on hard difficulty:
+        //   50% Slow, 30% Normal, 20% Fast
 		double category = rand.nextInt(10);
-		double speed = 0.3;
+
+        if (difficulty == SettingsMenu.Difficulty.EASY) {
+            category -= 1;
+        } else if (difficulty == SettingsMenu.Difficulty.HARD) {
+            category += 1;
+        }
 
 		if (category > 8) {
-			speed += 0.3;
             return new FastZombie(degree, distance);
 		}
 
 		if (category > 5) {
-			speed += 0.3;
             return new NormalZombie(degree, distance);
 		}
 

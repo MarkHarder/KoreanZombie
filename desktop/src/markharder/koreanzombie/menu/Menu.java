@@ -10,6 +10,7 @@ public class Menu {
     public Menu() {
         buttons = new Array<MenuButton>();
         addButton("Play");
+        addButton("Settings");
         addButton("Quit");
     }
 
