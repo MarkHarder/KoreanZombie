@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 
 public class Menu {
-    Array<MenuButton> buttons;
+    private Array<MenuButton> buttons;
 
     public Menu() {
         buttons = new Array<MenuButton>();

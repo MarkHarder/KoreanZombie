@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 
 public class SettingsMenu {
-    Array<MenuButton> radioButtons;
-    MenuButton backButton;
-    Texture selectionTexture;
-    Difficulty difficulty;
+    private Array<MenuButton> radioButtons;
+    private MenuButton backButton;
+    private Texture selectionTexture;
+    private Difficulty difficulty;
 
     public enum Difficulty {
         EASY,
