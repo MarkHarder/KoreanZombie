@@ -4,17 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
-public class Zombie {
+public abstract class Zombie {
     private Texture texture;
 	private int degree;
 	private double distance;
-	private int speed;
 	
-	public Zombie(Texture texture, int degree, double distance, int speed) {
+	public Zombie(Texture texture, int degree, double distance) {
         this.texture = texture;
 		this.degree = degree;
 		this.distance = distance;
-        this.speed = speed;
 	}
 	
 	public double getDistance() {
@@ -22,7 +20,7 @@ public class Zombie {
 	}
 	
 	public void act(float deltaTime) {
-		distance -= speed;
+		distance -= getSpeed();
 	}
 	
 	public void draw(Batch batch) {
@@ -37,4 +35,6 @@ public class Zombie {
     public void dispose() {
         texture.dispose();
     }
+
+    protected abstract int getSpeed();
 }
