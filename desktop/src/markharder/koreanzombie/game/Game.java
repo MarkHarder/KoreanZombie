@@ -183,7 +183,8 @@ public class Game {
 
         // draw the zombies
         for (Zombie z : zombies) {
-            z.draw(batch);
+            z.draw(batch, field.getX(), field.getY(), field.getWidth() / 2,
+                field.getHeight() / 2);
         }
     }
 

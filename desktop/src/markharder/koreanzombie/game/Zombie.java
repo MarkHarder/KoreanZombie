@@ -23,12 +23,11 @@ public abstract class Zombie {
 		distance -= getSpeed();
 	}
 	
-	public void draw(Batch batch) {
+	public void draw(Batch batch, float xOffset, float yOffset, float centerX,
+            float centerY) {
         int r = texture.getHeight() / 2;
-        double yOffset = 50;
-        double xOffset = 320;
-        double x = xOffset + Math.cos(degree) * distance - r + 800 / 2;
-        double y = yOffset + Math.sin(degree) * distance - r + 800 / 2;
+        double x = xOffset + Math.cos(degree) * distance - r + centerX;
+        double y = yOffset + Math.sin(degree) * distance - r + centerY;
         batch.draw(texture, (float) x, (float) y);
 	}
 
