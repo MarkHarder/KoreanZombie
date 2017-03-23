@@ -136,7 +136,7 @@ public class Game {
         for (Zombie z : zombies) {
             z.act(Gdx.graphics.getDeltaTime());
             // if a zombie reaches the center, remove it
-            if (z.getDistance() <= 17.5) {
+            if (z.reachedCenter()) {
                 delete.add(z);
 
                 // remove a life, if no lives remain end the game

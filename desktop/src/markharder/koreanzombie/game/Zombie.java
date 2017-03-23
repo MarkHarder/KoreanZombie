@@ -35,5 +35,13 @@ public abstract class Zombie {
         texture.dispose();
     }
 
+    public boolean reachedCenter() {
+        return getDistance() <= getRadius() + 10.5;
+    }
+
+    public float getRadius() {
+        return texture.getHeight() / 2;
+    }
+
     protected abstract int getSpeed();
 }
