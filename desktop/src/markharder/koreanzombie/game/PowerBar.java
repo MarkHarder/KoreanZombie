@@ -26,35 +26,35 @@ public class PowerBar {
     }
 
     public boolean isCharged() {
-        return this.power >= FULL_CHARGE;
+        return power >= FULL_CHARGE;
     }
 
     public void useCharge() {
-        this.power -= FULL_CHARGE;
+        power -= FULL_CHARGE;
     }
 
     public int getFullCharges() {
-        return this.power / FULL_CHARGE;
+        return power / FULL_CHARGE;
     }
 
     private int getBuildingCharges() {
-        return this.power % FULL_CHARGE;
+        return power % FULL_CHARGE;
     }
 
     public void charge() {
-        this.power += CHARGE_INCREMENT;
+        power += CHARGE_INCREMENT;
     }
 
     public void draw(Batch batch, float x, float y) {
         // draw powerbar
         if (isCharged()) {
-            batch.draw(this.powerbarOverflow, x + 5, y);
+            batch.draw(powerbarOverflow, x + 5, y);
             // TODO: figure out why rgb888 method is necessary
             // without it, the font color is white
             // Color(241f, 196f, 15f, 255f) doesn't work
             ((App) Gdx.app.getApplicationListener()).font.setColor(new Color(Color.rgb888(241f, 196f, 15f)));
-            ((App) Gdx.app.getApplicationListener()).font.draw(batch, "x" + getFullCharges(), x + WIDTH, y + this.height);
+            ((App) Gdx.app.getApplicationListener()).font.draw(batch, "x" + getFullCharges(), x + WIDTH, y + height);
         }
-        batch.draw(this.powerbarBuilding, x , y, WIDTH, (this.height / FULL_CHARGE) * getBuildingCharges());
+        batch.draw(powerbarBuilding, x , y, WIDTH, (height / FULL_CHARGE) * getBuildingCharges());
     }
 }
