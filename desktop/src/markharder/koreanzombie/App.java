@@ -31,6 +31,7 @@ public class App implements ApplicationListener {
 
     public enum Mode {
         MENU,
+        INSTRUCTIONS,
         SETTINGS,
         GAME
     }
@@ -75,6 +76,8 @@ public class App implements ApplicationListener {
             public boolean keyTyped(char character) {
                 if (currentMode == Mode.MENU) {
                     menu.keyTyped(character);
+                } else if (currentMode == Mode.INSTRUCTIONS) {
+                    setMode(Mode.MENU);
                 } else if (currentMode == Mode.SETTINGS) {
                     settingsMenu.keyTyped(character);
                 } else if (currentMode == Mode.GAME) {
@@ -92,11 +95,15 @@ public class App implements ApplicationListener {
                         game = new Game(settingsMenu.getDifficulty());
 
                         currentMode = Mode.GAME;
+                    } else if (value == "Instructions") {
+                        setMode(Mode.INSTRUCTIONS);
                     } else if (value == "Settings") {
                         currentMode = Mode.SETTINGS;
                     } else if (value == "Quit") {
                         Gdx.app.exit();
                     }
+                } else if (currentMode == Mode.INSTRUCTIONS) {
+                    setMode(Mode.MENU);
                 } else if (currentMode == Mode.SETTINGS) {
                     String value = settingsMenu.touchUp(((int) gameCoordinates.x), ((int) gameCoordinates.y), pointer, button);
 
@@ -138,6 +145,7 @@ public class App implements ApplicationListener {
 
         if (currentMode == Mode.MENU) {
             menu.draw(batch);
+        } else if (currentMode == Mode.INSTRUCTIONS) {
         } else if (currentMode == Mode.SETTINGS) {
             settingsMenu.draw(batch);
         } else if (currentMode == Mode.GAME) {
