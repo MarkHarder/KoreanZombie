@@ -59,7 +59,7 @@ public class App implements ApplicationListener {
         // the game
         game = new Game(settingsMenu.getDifficulty());
 
-        currentMode = Mode.MENU;
+        setMode(Mode.MENU);
 
         // set up the camera
         camera = new OrthographicCamera(game.getWidth(), game.getHeight());
@@ -94,11 +94,11 @@ public class App implements ApplicationListener {
                     if (value == "Play") {
                         game = new Game(settingsMenu.getDifficulty());
 
-                        currentMode = Mode.GAME;
+                        setMode(Mode.GAME);
                     } else if (value == "Instructions") {
                         setMode(Mode.INSTRUCTIONS);
                     } else if (value == "Settings") {
-                        currentMode = Mode.SETTINGS;
+                        setMode(Mode.SETTINGS);
                     } else if (value == "Quit") {
                         Gdx.app.exit();
                     }
@@ -108,7 +108,7 @@ public class App implements ApplicationListener {
                     String value = settingsMenu.touchUp(((int) gameCoordinates.x), ((int) gameCoordinates.y), pointer, button);
 
                     if (value == "Back") {
-                        currentMode = Mode.MENU;
+                        setMode(Mode.MENU);
                     }
                 }
                 return true;
