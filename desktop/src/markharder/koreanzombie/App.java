@@ -146,6 +146,21 @@ public class App implements ApplicationListener {
         if (currentMode == Mode.MENU) {
             menu.draw(batch);
         } else if (currentMode == Mode.INSTRUCTIONS) {
+            int x = 200;
+            int y = Gdx.graphics.getHeight() - 100;
+            Array<String> instructions = new Array<String>();
+            instructions.add("Korean Zombie Instructions:");
+            instructions.add("Type the Korean word defined by the English.");
+            instructions.add("A correct word will remove the closest zombie.");
+            instructions.add("Don't let the zombies touch the center.");
+            instructions.add("A zombie touching the center removes a life.");
+            instructions.add("When no lives are left, the game is over.");
+            instructions.add("Every ten zombies removed gives you a power charge.");
+            instructions.add("Press TAB to remove all zombies and lose a power charge.");
+            font.setColor(Color.WHITE);
+            for (int i = 0; i < instructions.size; i++) {
+                font.draw(batch, instructions.get(i), x, y - (i * 35));
+            }
         } else if (currentMode == Mode.SETTINGS) {
             settingsMenu.draw(batch);
         } else if (currentMode == Mode.GAME) {
