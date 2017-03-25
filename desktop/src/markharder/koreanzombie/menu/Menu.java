@@ -1,6 +1,9 @@
 package markharder.koreanzombie.menu;
 
+import markharder.koreanzombie.App;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 
@@ -17,7 +20,7 @@ public class Menu {
     public void addButton(String value) {
         int i = buttons.size;
         int x = 200;
-        int y = Gdx.graphics.getHeight() - 250 - (150 * i);
+        int y = Gdx.graphics.getHeight() - 300 - (150 * i);
         buttons.add(new MenuButton(value, x, y));
     }
 
@@ -43,6 +46,11 @@ public class Menu {
     }
 
     public void draw(Batch batch) {
+        int x = Gdx.graphics.getWidth() / 2 - 150;
+        int y = Gdx.graphics.getHeight() - 100;
+        ((App) Gdx.app.getApplicationListener()).font.setColor(Color.WHITE);
+        ((App) Gdx.app.getApplicationListener()).font.draw(batch, "Korean Zombie", x, y);
+
         for (MenuButton b : buttons) {
             b.draw(batch);
         }
