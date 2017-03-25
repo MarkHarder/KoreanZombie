@@ -37,6 +37,16 @@ public class Menu {
         return null;
     }
 
+    public void mouseMoved(int x, int y) {
+        for (MenuButton b : buttons) {
+            if (b.contains(x, y)) {
+                b.select();
+            } else {
+                b.unselect();
+            }
+        }
+    }
+
     public void dispose() {
         for (MenuButton button : buttons) {
             button.dispose();

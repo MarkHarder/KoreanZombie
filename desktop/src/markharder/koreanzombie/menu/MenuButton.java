@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 public class MenuButton {
     private int x;
     private int y;
+    private boolean selected;
     private Texture background;
     private String value;
     private GlyphLayout layout;
@@ -19,6 +20,7 @@ public class MenuButton {
         this.value = value;
         this.x = x;
         this.y = y;
+        selected = false;
 
         background = new Texture(Gdx.files.internal("images/button_background.png"));
         layout = new GlyphLayout(((App) Gdx.app.getApplicationListener()).font, value);
@@ -49,7 +51,19 @@ public class MenuButton {
         // center the text
         float centerX = x + background.getWidth() / 2 - layout.width / 2;
         float centerY = y + background.getHeight() / 2 + layout.height / 2;
-        ((App) Gdx.app.getApplicationListener()).font.setColor(Color.WHITE);
+        if (selected) {
+            ((App) Gdx.app.getApplicationListener()).font.setColor(Color.YELLOW);
+        } else {
+            ((App) Gdx.app.getApplicationListener()).font.setColor(Color.WHITE);
+        }
         ((App) Gdx.app.getApplicationListener()).font.draw(batch, value, centerX, centerY);
+    }
+
+    public void select() {
+        selected = true;
+    }
+
+    public void unselect() {
+        selected = false;
     }
 }

@@ -113,6 +113,18 @@ public class App implements ApplicationListener {
                 }
                 return true;
             }
+
+            @Override
+            public boolean mouseMoved(int screenX, int screenY) {
+                Vector3 gameCoordinates = camera.unproject(new Vector3(screenX, screenY, 0));
+                if (currentMode == Mode.MENU) {
+                    menu.mouseMoved(((int) gameCoordinates.x), ((int) gameCoordinates.y));
+                } else if (currentMode == Mode.SETTINGS) {
+                    settingsMenu.mouseMoved(((int) gameCoordinates.x), ((int) gameCoordinates.y));
+                }
+
+                return true;
+            }
         });
     }
 

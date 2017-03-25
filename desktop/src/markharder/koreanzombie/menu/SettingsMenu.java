@@ -56,6 +56,21 @@ public class SettingsMenu {
         return null;
     }
 
+    public void mouseMoved(int x, int y) {
+        for (MenuButton b : radioButtons) {
+            if (b.contains(x, y)) {
+                b.select();
+            } else {
+                b.unselect();
+            }
+        }
+        if (backButton.contains(x, y)) {
+            backButton.select();
+        } else {
+            backButton.unselect();
+        }
+    }
+
     public void dispose() {
         selectionTexture.dispose();
         for (MenuButton button : radioButtons) {
