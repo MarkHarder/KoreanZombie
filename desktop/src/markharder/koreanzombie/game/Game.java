@@ -37,6 +37,8 @@ public class Game {
     private Texture fieldTexture;
     private Sprite field;
 
+    private boolean paused;
+
     public Game(SettingsMenu.Difficulty difficulty) {
         this.difficulty = difficulty;
 
@@ -66,29 +68,38 @@ public class Game {
         field.setCenter(getWidth() / 2, getHeight() / 2);
 
         powerbar = new PowerBar(field.getHeight());
+
+        paused = false;
     }
 
     public void keyTyped(char character) {
-
-        if ((int) character == 27) {
-            // escape key
-            // go back to the main menu
-            ((App) Gdx.app.getApplicationListener()).setMode(App.Mode.MENU);
-        } else if ((int) character == 13) {
-            // enter key
-            // clear the input and give a new question
-            // essentially skipping a question
-            input.clear();
-            currentQuestion = randomQuestion();
-        } else if ((int) character == 9) {
-            // tab key
-            // clear zombies if there is enough power
-            if (powerbar.isCharged()) {
-                powerbar.useCharge();
-                zombies.clear();
+        if (paused) {
+            if ((int) character == 27) {
+                // escape key
+                // unpause the game
+                paused = !paused;
             }
         } else {
-            input.add(character);
+            if ((int) character == 27) {
+                // escape key
+                // pause the game
+                paused = !paused;
+            } else if ((int) character == 13) {
+                // enter key
+                // clear the input and give a new question
+                // essentially skipping a question
+                input.clear();
+                currentQuestion = randomQuestion();
+            } else if ((int) character == 9) {
+                // tab key
+                // clear zombies if there is enough power
+                if (powerbar.isCharged()) {
+                    powerbar.useCharge();
+                    zombies.clear();
+                }
+            } else {
+                input.add(character);
+            }
         }
     }
 
@@ -103,6 +114,10 @@ public class Game {
     }
 
     public void act() {
+        if (paused) {
+            return;
+        }
+
         // check the answer
         if (input.toString().equals(currentQuestion.getAnswer())) {
             // clear the input, get a new question, increase power
