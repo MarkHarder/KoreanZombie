@@ -70,6 +70,7 @@ public class Game {
     public void touchUp(int x, int y, int pointer, int button) {
         String value = pauseMenu.touchUp(x, y, pointer, button);
         if (value == "Resume") {
+            currentQuestion = randomQuestion();
             paused = !paused;
         } else if (value == "Restart") {
             setupGame();
