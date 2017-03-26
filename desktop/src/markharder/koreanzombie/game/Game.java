@@ -49,14 +49,6 @@ public class Game {
         rand = new Random();
         width = 1440;
         height = 1440 * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-        lastZombieTime = TimeUtils.nanoTime();
-        input = new KoreanString();
-
-        zombies = new Array<Zombie>();
-        lives = new Array<Texture>();
-        lives.add(new Texture(Gdx.files.internal("images/heart.png")));
-        lives.add(new Texture(Gdx.files.internal("images/heart.png")));
-        lives.add(new Texture(Gdx.files.internal("images/heart.png")));
 
         questions = new Array<Question>();
         try {
@@ -64,17 +56,15 @@ public class Game {
         } catch(IOException e) {
             e.printStackTrace();
         }
-        currentQuestion = randomQuestion();
 
         // set up the images
         fieldTexture = new Texture(Gdx.files.internal("images/field.png"));
         field = new Sprite(fieldTexture);
         field.setCenter(getWidth() / 2, getHeight() / 2);
 
-        powerbar = new PowerBar(field.getHeight());
-
         pauseMenu = new PauseMenu();
-        paused = false;
+
+        setupGame();
     }
 
     public void touchUp(int x, int y, int pointer, int button) {
@@ -82,7 +72,7 @@ public class Game {
         if (value == "Resume") {
             paused = !paused;
         } else if (value == "Restart") {
-            // TODO
+            setupGame();
         } else if (value == "Back to menu") {
             ((App) Gdx.app.getApplicationListener()).setMode(App.Mode.MENU);
         }
@@ -248,6 +238,24 @@ public class Game {
 
     public float getHeight() {
         return height;
+    }
+
+    private void setupGame() {
+        input = new KoreanString();
+
+        lastZombieTime = TimeUtils.nanoTime();
+        zombies = new Array<Zombie>();
+
+        lives = new Array<Texture>();
+        lives.add(new Texture(Gdx.files.internal("images/heart.png")));
+        lives.add(new Texture(Gdx.files.internal("images/heart.png")));
+        lives.add(new Texture(Gdx.files.internal("images/heart.png")));
+
+        currentQuestion = randomQuestion();
+
+        powerbar = new PowerBar(field.getHeight());
+
+        paused = false;
     }
 
     /*
