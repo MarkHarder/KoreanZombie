@@ -2,13 +2,16 @@ package markharder.koreanzombie.game;
 
 import markharder.koreanzombie.App;
 import markharder.koreanzombie.korean.KoreanString;
+import markharder.koreanzombie.menu.PauseMenu;
 import markharder.koreanzombie.menu.SettingsMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -37,6 +40,7 @@ public class Game {
     private Texture fieldTexture;
     private Sprite field;
 
+    private PauseMenu pauseMenu;
     private boolean paused;
 
     public Game(SettingsMenu.Difficulty difficulty) {
@@ -69,7 +73,19 @@ public class Game {
 
         powerbar = new PowerBar(field.getHeight());
 
+        pauseMenu = new PauseMenu();
         paused = false;
+    }
+
+    public void touchUp(int x, int y, int pointer, int button) {
+        String value = pauseMenu.touchUp(x, y, pointer, button);
+        if (value == "Resume") {
+            paused = !paused;
+        } else if (value == "Restart") {
+            // TODO
+        } else if (value == "Back to menu") {
+            ((App) Gdx.app.getApplicationListener()).setMode(App.Mode.MENU);
+        }
     }
 
     public void keyTyped(char character) {
@@ -101,6 +117,14 @@ public class Game {
                 input.add(character);
             }
         }
+    }
+
+    public boolean mouseMoved(int screenX, int screenY) {
+        if (paused) {
+            pauseMenu.mouseMoved(screenX, screenY);
+        }
+
+        return true;
     }
 
     public void dispose() {
@@ -200,6 +224,21 @@ public class Game {
         for (Zombie z : zombies) {
             z.draw(batch, field.getX(), field.getY(), field.getWidth() / 2,
                 field.getHeight() / 2);
+        }
+
+        if (paused) {
+            batch.end();
+            ShapeRenderer shape = new ShapeRenderer();
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            shape.begin(ShapeRenderer.ShapeType.Filled);
+            shape.setColor(new Color(0, 0, 0, 0.65f));
+            shape.rect(0, 0, getWidth(), getHeight());
+            shape.end();
+            Gdx.gl.glDisable(GL20.GL_BLEND);
+            batch.begin();
+
+            pauseMenu.draw(batch);
         }
     }
 

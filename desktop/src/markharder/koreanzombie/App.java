@@ -102,6 +102,8 @@ public class App implements ApplicationListener {
                     } else if (value == "Quit") {
                         Gdx.app.exit();
                     }
+                } else if (currentMode == Mode.GAME) {
+                    game.touchUp(((int) gameCoordinates.x), ((int) gameCoordinates.y), pointer, button);
                 } else if (currentMode == Mode.INSTRUCTIONS) {
                     setMode(Mode.MENU);
                 } else if (currentMode == Mode.SETTINGS) {
@@ -119,6 +121,8 @@ public class App implements ApplicationListener {
                 Vector3 gameCoordinates = camera.unproject(new Vector3(screenX, screenY, 0));
                 if (currentMode == Mode.MENU) {
                     menu.mouseMoved(((int) gameCoordinates.x), ((int) gameCoordinates.y));
+                } else if (currentMode == Mode.GAME) {
+                    game.mouseMoved(((int) gameCoordinates.x), ((int) gameCoordinates.y));
                 } else if (currentMode == Mode.SETTINGS) {
                     settingsMenu.mouseMoved(((int) gameCoordinates.x), ((int) gameCoordinates.y));
                 }
