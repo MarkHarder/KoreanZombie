@@ -8,6 +8,15 @@ To run the program, execute:
 
     $ ./gradlew desktop:run
 
+To compile the jar and execute it:
+
+    $ gradle dist:desktop
+    $ java -jar desktop/build/libs/desktop-1.0.jar
+
+To run tests:
+
+    $ gradle test
+
 This program was made using LibGDX 1.6.1, Gradle 2.11, and Java 1.8.0_20
 
 ## Contributing
